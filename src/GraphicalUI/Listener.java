@@ -23,27 +23,36 @@ public class Listener {
     private PaintRectangle rectangle;
 
 
-
-
-    public Listener (GraphicalUI graphicalUI){
-        this.graphicalUI=graphicalUI;
+    public Listener(GraphicalUI graphicalUI) {
+        this.graphicalUI = graphicalUI;
     }
 
-    public OpenListener getOpenListener(){
+    public OpenListener getOpenListener() {
         return new OpenListener();
     }
-    public ExitListener getExitListener(){
+
+    public ExitListener getExitListener() {
         return new ExitListener();
     }
-    public MarkerListener getMarkerListener(){
+
+    public MarkerListener getMarkerListener() {
         return new MarkerListener();
     }
-    public ButtonPressed getButtonPressed(){
+
+    public ButtonPressed getButtonPressed() {
         return new ButtonPressed();
     }
-    public CategoryListener getCategoryListener() { return new CategoryListener(); }
-    public PaintRectangle getRectangle(){ return rectangle;}
-  //  public FocusList getFocusListener(){ return new FocusList();}
+
+    public CategoryListener getCategoryListener() {
+        return new CategoryListener();
+    }
+
+    public HideListener getHideListener(){ return new HideListener();}
+
+    public PaintRectangle getRectangle() {
+        return rectangle;
+    }
+    //  public FocusList getFocusListener(){ return new FocusList();}
 
 
     class ValueListener implements ActionListener {
@@ -82,9 +91,10 @@ public class Listener {
 
     }
 
-    public String getFilNamn(){
+    public String getFilNamn() {
         return jfc.getSelectedFile().getAbsolutePath();
     }
+
     class ExitListener implements ActionListener {
         public void actionPerformed(ActionEvent ave) {
             System.exit(0);
@@ -95,14 +105,12 @@ public class Listener {
     public class MarkerListener extends MouseAdapter {
 
 
-
-        public int getX(){
+        public int getX() {
             return 3;
         }
+
         @Override
         public void mouseClicked(MouseEvent mev) {
-
-
 
 
             int x = mev.getX() - 25;
@@ -110,7 +118,7 @@ public class Listener {
             imagePanel.requestFocusInWindow();
 
 
-            if(!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Bus")) {
+            if (!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Bus")) {
                 BusMarker marker = new BusMarker(x, y);
                 PaintRectangle rectangle = new PaintRectangle(x, y);
 
@@ -122,47 +130,42 @@ public class Listener {
                 imagePanel.removeMouseListener(MarkerListener.this);
 
 
+            } else if (!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Train               ")) {
+                TrainMarker marker2 = new TrainMarker(x, y);
 
-
-            }
-             else if (!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Train               ")) {
-                 TrainMarker marker2 = new TrainMarker(x, y);
-
-                 imagePanel.add(marker2);
-                 imagePanel.validate();
-                 imagePanel.repaint();
-                 imagePanel.removeMouseListener(MarkerListener.this);
-             }
-             else if(!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Subway")) {
-                 SubwayMarker marker3 = new SubwayMarker(x, y);
+                imagePanel.add(marker2);
+                imagePanel.validate();
+                imagePanel.repaint();
+                imagePanel.removeMouseListener(MarkerListener.this);
+            } else if (!graphicalUI.getIsSelected() && graphicalUI.getJList().equalsIgnoreCase("Subway")) {
+                SubwayMarker marker3 = new SubwayMarker(x, y);
 
 
                 PaintRectangle rectangle = new PaintRectangle(x, y);
 
-                    rectangle.setVisible(false);
-                 imagePanel.add(rectangle);
-                 imagePanel.add(marker3);
-                 imagePanel.validate();
-                 imagePanel.repaint();
-                 imagePanel.removeMouseListener(MarkerListener.this);
+                rectangle.setVisible(false);
+                imagePanel.add(rectangle);
+                imagePanel.add(marker3);
+                imagePanel.validate();
+                imagePanel.repaint();
+                imagePanel.removeMouseListener(MarkerListener.this);
 
-             }
-
-            else if (graphicalUI.getIsSelected()){
-                        Marker marker4 = new Marker(x, y);
-                        imagePanel.add(marker4);
-                        imagePanel.validate();
-                        imagePanel.repaint();
-                        imagePanel.removeMouseListener(MarkerListener.this);
+            } else if (graphicalUI.getIsSelected()) {
+                Marker marker4 = new Marker(x, y);
+                imagePanel.add(marker4);
+                imagePanel.validate();
+                imagePanel.repaint();
+                imagePanel.removeMouseListener(MarkerListener.this);
             }
 
-                System.out.println(mev.getPoint());
-                imagePanel.setCursor(Cursor.getDefaultCursor());
+            System.out.println(mev.getPoint());
+            imagePanel.setCursor(Cursor.getDefaultCursor());
 
 
         }
     }
-    public class CategoryListener implements ListSelectionListener{
+
+    public class CategoryListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent lse) {
             if (!lse.getValueIsAdjusting()) {
                 System.out.println(graphicalUI.getJList());
@@ -173,18 +176,22 @@ public class Listener {
     }
 
 
+    public class ButtonPressed implements ActionListener {
+        public void actionPerformed(ActionEvent ave) {
+            try {
+                imagePanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                imagePanel.addMouseListener(getMarkerListener());
 
 
-
-
-    public class ButtonPressed implements ActionListener{
-        public void actionPerformed (ActionEvent ave){
-            imagePanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-            imagePanel.addMouseListener(getMarkerListener());
-
-
+            } catch (NullPointerException e){
+                JOptionPane.showMessageDialog(graphicalUI,"Ingen karta laddad!");
+            }
+            }
+        }
+    public class HideListener implements ActionListener {
+        public void actionPerformed(ActionEvent ave) {
+            System.out.println("Komplettera");
         }
     }
 }
-
 

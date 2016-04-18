@@ -81,6 +81,7 @@ public class GraphicalUI extends JFrame {
 
         JButton hideButton = new JButton("Hide");
         north.add(hideButton);
+        hideButton.addActionListener(listener.getHideListener());
 
 
         JButton removeButton = new JButton ("Remove");
