@@ -72,7 +72,6 @@ public class GraphicalUI extends JFrame {
         north.add(comboChoice);
         comboChoice.addActionListener(listener.getButtonPressed());
 
-
         JTextField write = new JTextField("Search", 10);
         north.add(write);
 
@@ -82,7 +81,6 @@ public class GraphicalUI extends JFrame {
         JButton hideButton = new JButton("Hide");
         north.add(hideButton);
         hideButton.addActionListener(listener.getHideListener());
-
 
         JButton removeButton = new JButton ("Remove");
         north.add(removeButton);

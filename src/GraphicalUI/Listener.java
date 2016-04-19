@@ -186,8 +186,8 @@ public class Listener {
             } catch (NullPointerException e){
                 JOptionPane.showMessageDialog(graphicalUI,"Ingen karta laddad!");
             }
-            }
         }
+    }
     public class HideListener implements ActionListener {
         public void actionPerformed(ActionEvent ave) {
             System.out.println("Komplettera");
