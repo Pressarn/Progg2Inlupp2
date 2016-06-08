@@ -85,7 +85,7 @@ public class Listener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String line;
-            try (
+            try {
                     int svar = jfc.showOpenDialog(graphicalUI);
                     if (svar != JFileChooser.APPROVE_OPTION)
             return;
@@ -98,14 +98,13 @@ public class Listener {
             JScrollPane scroll = new JScrollPane(imagePanel);
             graphicalUI.add(scroll);
             graphicalUI.pack();
-            graphicalUI.validate();
-            graphicalUI.repaint();
+//            graphicalUI.validate();
+//            graphicalUI.repaint();
 
             InputStream fis = new FileInputStream(filnamn);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             BufferedReader br = new BufferedReader(isr);
-            )
-             {
+
                 while ((line = br.readLine()) != null) {
                     String[] words = line.split(",");
                     if (words.length == 5) {
@@ -144,7 +143,22 @@ public class Listener {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                PrintWriter writer = new PrintWriter("jarvafaltet.places", "UTF-8");
+                int svar = jfc.showSaveDialog(graphicalUI);
+                if (svar != JFileChooser.APPROVE_OPTION)
+                    return;
+
+                File fil = jfc.getSelectedFile();
+                String filnamn = fil.getAbsolutePath();
+                System.out.println(filnamn);
+                imagePanel = new ImagePanel(filnamn);
+                graphicalUI.add(imagePanel);
+                JScrollPane scroll = new JScrollPane(imagePanel);
+                graphicalUI.add(scroll);
+                graphicalUI.pack();
+                graphicalUI.validate();
+                graphicalUI.repaint();
+
+                PrintWriter writer = new PrintWriter(filnamn);
                 for (Location location : locations) {
                     if (location instanceof Named) {
                         writer.print("Named");
@@ -232,27 +246,6 @@ public class Listener {
 
     }
 
-    public class OpenListener2 implements ActionListener {
-        public void actionPerformed(ActionEvent ave) {
-            int svar = jfc.showOpenDialog(graphicalUI);
-            if (svar != JFileChooser.APPROVE_OPTION)
-                return;
-
-            File fil = jfc.getSelectedFile();
-            String filnamn = fil.getAbsolutePath();
-            System.out.println(filnamn);
-            imagePanel = new ImagePanel(filnamn);
-            graphicalUI.add(imagePanel);
-            JScrollPane scroll = new JScrollPane(imagePanel);
-            graphicalUI.add(scroll);
-            graphicalUI.pack();
-            graphicalUI.validate();
-            graphicalUI.repaint();
-
-        }
-
-
-    }
 
     public String getFilNamn() {
         return jfc.getSelectedFile().getAbsolutePath();

@@ -8,7 +8,7 @@ import java.util.Map;
 public class GraphicalUI extends JFrame {
 
     JTextField write = new JTextField("Search", 10);
-    String [] category = {"BUSS", "TÅG", "TUNNELBANA"};
+    String [] category = {"Buss", "Tåg", "Tunnelbana"};
     JList <String> categories = new JList<> (category);
     private ImagePanel ip;
     private Listener listener = new Listener(this);
