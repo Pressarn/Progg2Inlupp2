@@ -5,13 +5,17 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.io.FileFilter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.*;
+import javax.swing.filechooser.*;
+
 import Location.*;
 import Marker.*;
+
 
 public class Listener {
     private GraphicalUI write;
@@ -93,13 +97,7 @@ public class Listener {
             File fil = jfc.getSelectedFile();
             String filnamn = fil.getAbsolutePath();
             System.out.println(filnamn);
-            imagePanel = new ImagePanel(filnamn);
-            graphicalUI.add(imagePanel);
-            JScrollPane scroll = new JScrollPane(imagePanel);
-            graphicalUI.add(scroll);
-            graphicalUI.pack();
-//            graphicalUI.validate();
-//            graphicalUI.repaint();
+
 
             InputStream fis = new FileInputStream(filnamn);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
@@ -115,17 +113,18 @@ public class Listener {
                         words2[5] = "";
                         words = words2;
                     }
+                    LocationInfo locationInfo = new LocationInfo(2,2, "a", "b");
                     Location location;
-                    Category category = Category.valueOf(words[1]);
+                    Category category = Category.valueOf(words[1].toUpperCase().trim());
                     int x = Integer.parseInt(words[2]);
                     int y = Integer.parseInt(words[3]);
                     Marker marker;
                     if (words[0].equals("Named")) {
-                        marker = new NamedMarker(x, y, category);
-                        location = new Named(words[4], new Position(x, y), marker, category);
+                        marker = new NamedMarker(x, y, category, locationInfo, false);
+                        location = new Named(words[4], new Position(x, y), marker, category, locationInfo);
                     } else {
-                        marker = new DescribedMarker(x, y, category);
-                        location = new Described(words[4], new Position(x, y), marker, category, words[5]);
+                        marker = new DescribedMarker(x, y, category, locationInfo, false);
+                        location = new Described(words[4], new Position(x, y), marker, category, words[5], locationInfo);
                     }
                     locations.add(location);
                     imagePanel.add(marker);
@@ -150,13 +149,6 @@ public class Listener {
                 File fil = jfc.getSelectedFile();
                 String filnamn = fil.getAbsolutePath();
                 System.out.println(filnamn);
-                imagePanel = new ImagePanel(filnamn);
-                graphicalUI.add(imagePanel);
-                JScrollPane scroll = new JScrollPane(imagePanel);
-                graphicalUI.add(scroll);
-                graphicalUI.pack();
-                graphicalUI.validate();
-                graphicalUI.repaint();
 
                 PrintWriter writer = new PrintWriter(filnamn);
                 for (Location location : locations) {
@@ -227,8 +219,9 @@ public class Listener {
     public class OpenListener implements ActionListener {
         public void actionPerformed(ActionEvent ave) {
             int svar = jfc.showOpenDialog(graphicalUI);
-            if (svar != JFileChooser.APPROVE_OPTION)
+            if (svar != JFileChooser.APPROVE_OPTION) {
                 return;
+            }
 
             File fil = jfc.getSelectedFile();
             String filnamn = fil.getAbsolutePath();
@@ -296,16 +289,53 @@ public class Listener {
                 imagePanel.removeMouseListener(MarkerListener.this);
                 Location location;
                 String name;
+                String description;
+
+                JPanel myPanel = new JPanel();
+                JPanel myPanel2 = new JPanel();
+                JLabel forField1 = new JLabel("Name: ");
+                JLabel forField12 = new JLabel("Name: ");
+                JLabel forField2 = new JLabel("Description: ");
+                JTextField nameField = new JTextField(10);
+                JTextField nameField12 = new JTextField(10);
+                JTextField descriptionField = new JTextField(10);
+                myPanel.add(forField1);
+                myPanel.add(nameField);
+                myPanel.add(forField2);
+                myPanel.add(descriptionField);
+                myPanel2.add(forField12);
+                myPanel2.add(nameField12);
+
                 Marker marker;
+                LocationInfo locationInfo;
+
                 if (value.equals("Named")) {
-                    marker = new NamedMarker(x - 25, y - 50, category);
-                    name = JOptionPane.showInputDialog("Namn: ", JOptionPane.OK_CANCEL_OPTION);
-                    location = new Named(name, position, marker, category);
+
+                    JOptionPane.showMessageDialog(null, myPanel2, "New named", JOptionPane.QUESTION_MESSAGE);
+                    name = nameField12.getText();
+                    locationInfo = new LocationInfo(x + 35, y - 50, name, "");
+                    marker = new NamedMarker(x -25 , y -50, category, locationInfo, false);
+                    location = new Named(name, position, marker, category, locationInfo);
+                    imagePanel.add(locationInfo);
+
+//                    marker = new NamedMarker(x - 25, y - 50, category);
+//                    name = JOptionPane.showInputDialog("Namn:", JOptionPane.OK_CANCEL_OPTION);
+//                    location = new Named(name, position, marker, category);
 
                 } else {
-                    marker = new DescribedMarker(x - 25, y - 50, category);
-                    name = JOptionPane.showInputDialog("Namn: ", JOptionPane.OK_CANCEL_OPTION);
-                    location = new Described(name, position, marker, category, "");
+                    JOptionPane.showMessageDialog(null, myPanel, "New described", JOptionPane.QUESTION_MESSAGE);
+
+                    name = nameField.getText();
+                    description = descriptionField.getText();
+                    System.out.print(descriptionField.getText());
+                    locationInfo = new LocationInfo(x + 35, y - 50, name, description);
+                    marker = new DescribedMarker(x -25 , y -50, category, locationInfo, false);
+                    location = new Described(name, position, marker, category, description, locationInfo);
+                    imagePanel.add(locationInfo);
+
+//                    marker = new DescribedMarker(x - 25, y - 50, category);
+//                    name = JOptionPane.showInputDialog("Namn:", JOptionPane.OK_CANCEL_OPTION);
+//                    location = new Described(name, position, marker, category, "");
                 }
                 locations.add(location);
 
@@ -318,7 +348,7 @@ public class Listener {
 
 
             } if (SwingUtilities.isRightMouseButton(mev)){
-//                System.out.print("Test");
+
                 int x = mev.getX();
                 int y = mev.getY();
                 for (Location location : locations) {

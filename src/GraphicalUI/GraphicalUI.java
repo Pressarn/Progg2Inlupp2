@@ -48,7 +48,7 @@ public class GraphicalUI extends JFrame {
         eastside.setLayout(new BoxLayout(eastside, BoxLayout.Y_AXIS));
         east.add(eastside, BorderLayout.EAST);
 
-        JLabel kategorier = new JLabel("Categories        ");
+        JLabel kategorier = new JLabel("Categories");
         eastside.add(kategorier);
         kategorier.setAlignmentX(RIGHT_ALIGNMENT);
 

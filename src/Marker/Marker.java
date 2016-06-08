@@ -2,6 +2,7 @@ package Marker;
 
 
 import GraphicalUI.GraphicalUI;
+import GraphicalUI.LocationInfo;
 import Location.Category;
 
 import javax.swing.*;
@@ -24,8 +25,10 @@ public class Marker extends JComponent {
     private int [] xes = {0,25,50};
     private int [] yes = {0,50,0};
 
-    public Marker (int x, int y, Category category){
+    public Marker (int x, int y, Category category, LocationInfo locationInfo, boolean marked){
         this.category = category;
+        this.marked = marked;
+
         setLayout(null);
         setBounds(x,y,50,50);
         setPreferredSize(new Dimension(50,50));
