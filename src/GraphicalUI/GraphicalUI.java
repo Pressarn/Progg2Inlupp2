@@ -2,13 +2,17 @@ package GraphicalUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GraphicalUI extends JFrame {
 
-    String [] category = {"Bus", "Train               ", "Subway"};
+    JTextField write = new JTextField("Search", 10);
+    String [] category = {"BUSS", "TÅG", "TUNNELBANA"};
     JList <String> categories = new JList<> (category);
     private ImagePanel ip;
     private Listener listener = new Listener(this);
+    public JTextField getWrite(){return write;}
 
 
     public GraphicalUI() {
@@ -34,8 +38,8 @@ public class GraphicalUI extends JFrame {
         JLabel labelTop = new JLabel("Top", SwingConstants.CENTER);
         add(labelTop, BorderLayout.NORTH);
 
-
-
+        save.addActionListener(listener.getSaveListener());
+        loadPlaces.addActionListener(listener.getLoadListener());
         JPanel east = new JPanel();
         east.setLayout(new BorderLayout());
         JLabel labelSort = new JLabel();
@@ -54,12 +58,10 @@ public class GraphicalUI extends JFrame {
         eastside.add(categories);
         categories.addListSelectionListener(listener.getCategoryListener());
 
-
-
         JButton hideCategoryButton = new JButton("Hide category");
         hideCategoryButton.setAlignmentX(RIGHT_ALIGNMENT);
         eastside.add(hideCategoryButton);
-
+        hideCategoryButton.addActionListener(listener.getHideCategory());
 
         eastside.setMinimumSize(new Dimension (150, 450));
 
@@ -72,27 +74,25 @@ public class GraphicalUI extends JFrame {
         north.add(comboChoice);
         comboChoice.addActionListener(listener.getButtonPressed());
 
-        JTextField write = new JTextField("Search", 10);
         north.add(write);
 
         JButton searchButton = new JButton ("Search");
         north.add(searchButton);
+        searchButton.addActionListener(listener.getSearchButton());
 
         JButton hideButton = new JButton("Hide");
         north.add(hideButton);
-        hideButton.addActionListener(listener.getHideListener());
+        hideButton.addActionListener(listener.getHideButton());
 
         JButton removeButton = new JButton ("Remove");
         north.add(removeButton);
+        removeButton.addActionListener(listener.getRemoveButton());
 
         JButton whatButton = new JButton("What is here?");
         north.add(whatButton);
-
-
-
+        whatButton.addActionListener(listener.getWhatListener());
 
         add(north, BorderLayout.NORTH);
-
 
         setVisible(true);
         pack();
@@ -107,15 +107,14 @@ public class GraphicalUI extends JFrame {
 
     }
     public boolean getIsSelected(){
-        return categories.isSelectionEmpty();
-
+        return !categories.isSelectionEmpty();
     }
 
-
-
+//    public String getNamedDescribed(){
+//        return
+//    }
 
     public static void main(String[] args) {
         GraphicalUI window = new GraphicalUI();
     }
 }
-
